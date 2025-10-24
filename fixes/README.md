@@ -2,6 +2,11 @@
 
 ## Índice de Correcciones
 
+### ✅ v17.0.1.2.3 (2025-10-19) - FIX FORMATO ESTÁNDAR
+**Bug:** Error con checkbox desactivado  
+**Fix:** qty_done → quantity en formato estándar  
+**Estado:** ✅ **FUNCIONA** - Ambos formatos operativos
+
 ### ✅ v17.0.1.2.2 (2025-10-19) - CON PLURALIZACIÓN
 **Mejora:** Pluralización automática y eliminación de duplicación  
 **Muestra:** "24,000 Unidades (4 Cajas de 6Uds.)"  

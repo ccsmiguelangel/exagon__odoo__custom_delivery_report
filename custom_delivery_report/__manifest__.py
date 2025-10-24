@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Custom Delivery Report',
-    'version': '17.0.1.2.2',
+    'version': '17.0.1.2.3',
     'category': 'Inventory/Delivery',
     'summary': 'Personaliza reportes de albarán (PDF y Email) por empresa',
     'description': """

@@ -87,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-set="lines" t-value="o.move_line_ids.filtered(lambda x: x.qty_done and x.product_id)"/>
+                        <t t-set="lines" t-value="o.move_line_ids.filtered(lambda x: x.quantity and x.product_id)"/>
                         <t t-foreach="lines" t-as="move_line">
                             <tr>
                                 <td>
@@ -97,7 +97,7 @@
                                     </t>
                                 </td>
                                 <td class="text-center">
-                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.quantity"/>
                                     <span t-field="move_line.product_uom_id.name"/>
                                 </td>
                             </tr>

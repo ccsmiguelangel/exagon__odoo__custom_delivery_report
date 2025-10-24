@@ -1,5 +1,16 @@
 # Changelog - Custom Delivery Report
 
+## [17.0.1.2.3] - 2025-10-19
+### Fixed
+- **BUG CRÍTICO:** Error en formato estándar cuando checkbox desactivado
+- Reemplazado campo computed `qty_done` por campo stored `quantity`
+- Formato estándar ahora funciona correctamente sin activar checkbox
+
+### Technical
+- Línea 90: `x.qty_done` → `x.quantity` en lambda filter
+- Línea 100: `move_line.qty_done` → `move_line.quantity`
+- Mismo campo usado en ambos formatos (personalizado y estándar)
+
 ## [17.0.1.2.2] - 2025-10-19
 ### Fixed
 - Pluralización: "Caja" → "Cajas" cuando pkg_qty > 1

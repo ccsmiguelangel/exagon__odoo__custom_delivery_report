@@ -12,8 +12,8 @@ alwaysApply: true
 - **Módulos:** `custom_delivery_report` y `custom_delivery_email` (mismo código, diferente nombre)
 - **Función:** Personaliza PDF y Email de albaranes (stock.picking)
 - **Configuración:** Por empresa vía `ir.config_parameter`
-- **Versión:** 17.0.1.2.2 ✅ Con pluralización
-- **Nota:** v1.1.1 primera funcional, v1.2.0 empaquetado, v1.2.1 formato completo, v1.2.2 pluralización
+- **Versión:** 17.0.1.2.3 ✅ Fix formato estándar
+- **Nota:** v1.1.1 primera funcional, v1.2.0 empaquetado, v1.2.1 formato completo, v1.2.2 pluralización, v1.2.3 fix qty_done
 
 ## Entorno
 - Odoo 17 Community en CloudClusters (Kubernetes)

@@ -1,10 +1,10 @@
 # Odoo 17 - Custom Delivery Module
 
 ## Estado
-- **Versión:** 17.0.1.2.2 ✅ **Con pluralización**
+- **Versión:** 17.0.1.2.3 ✅ **Fix formato estándar**
 - **Módulos:** `custom_delivery_report` y `custom_delivery_email` (idénticos)
-- **Estado:** Funcional - Formato: "24,000 Unidades (4 Cajas de 6Uds.)"
-- **Incluye:** Cantidad, UdM, empaquetado con pluralización automática
+- **Estado:** Funcional - Ambos formatos (personalizado y estándar) operativos
+- **Incluye:** Cantidad, UdM, empaquetado con pluralización, campo stored quantity
 
 ## Documentación
 - **Reglas Cursor:** `.cursor/rules/` - Lee primero

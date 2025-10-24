@@ -32,5 +32,5 @@ Módulo Odoo 17 que personaliza PDF y Email de albaranes de entrega.
 ```
 
 ## Versión
-17.0.1.2.2 ✅ Con pluralización
+17.0.1.2.3 ✅ Fix formato estándar
 
