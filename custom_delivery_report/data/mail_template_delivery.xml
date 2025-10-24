@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Plantilla de correo personalizada para albarán de entrega -->
+    <record id="mail_template_delivery_custom" model="mail.template">
+        <field name="name">Albarán de Entrega - Formato Personalizado</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Albarán ${object.name}</field>
+        <field name="email_from">${(object.company_id.email or user.email) | safe}</field>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+    <p>Estimado/a <strong>${object.partner_id.name}</strong>,</p>
+    
+    <p>Adjuntamos el albarán de entrega <strong>${object.name}</strong> correspondiente a su pedido.</p>
+    
+    <h3 style="color: #875A7B; margin-top: 30px;">Detalles del envío:</h3>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #ddd; font-size: 14px;">
+        <thead style="background-color: #875A7B; color: white;">
+            <tr>
+                <th style="border: 1px solid #875A7B; padding: 10px; text-align: left;">Producto</th>
+                <th style="border: 1px solid #875A7B; padding: 10px; text-align: left;">Lote/Nº de serie</th>
+                <th style="border: 1px solid #875A7B; padding: 10px; text-align: right;">Entregado</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for line in object.move_line_ids:
+            <tr style="border-bottom: 1px solid #ddd;">
+                <!-- Producto -->
+                <td style="border: 1px solid #ddd; padding: 8px;">
+                    ${line.product_id.display_name}
+                </td>
+                
+                <!-- Lote/Nº de serie -->
+                <td style="border: 1px solid #ddd; padding: 8px;">
+                    % if line.lot_id:
+                    ${line.lot_id.name}
+                    % elif line.lot_name:
+                    ${line.lot_name}
+                    % endif
+                </td>
+                
+                <!-- Entregado con empaquetado -->
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+                    ${'{:,.3f}'.format(line.qty_done).replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')} ${line.product_uom_id.name}
+                    
+                    % if line.product_packaging_id and line.product_packaging_qty:
+                    <br/>
+                    <span style="font-size: 12px; color: #666;">
+                        (${int(line.product_packaging_qty)} ${line.product_packaging_id.name} ${int(line.product_packaging_id.qty)} Uds.)
+                    </span>
+                    % endif
+                </td>
+            </tr>
+            % endfor
+        </tbody>
+    </table>
+    
+    <p style="margin-top: 30px;">
+        Saludos cordiales,<br/>
+        <strong>${object.company_id.name}</strong>
+    </p>
+    
+    <hr style="margin-top: 30px; border: none; border-top: 1px solid #ddd;"/>
+    <p style="font-size: 12px; color: #999;">
+        Este es un correo automático, por favor no responder directamente.
+    </p>
+</div>
+        </field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

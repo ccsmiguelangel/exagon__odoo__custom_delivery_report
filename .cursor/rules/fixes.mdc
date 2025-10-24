@@ -1,0 +1,52 @@
+---
+description: "Gestión de fixes y correcciones de errores"
+---
+# Gestión de Fixes
+
+## Estructura
+```
+fixes/
+├── FIX_v{version}.md    # Documentación del fix
+└── README.md            # Índice de fixes
+```
+
+## Formato Fix
+```markdown
+# Fix v{version}
+
+## Error
+```
+[Mensaje de error exacto]
+```
+
+## Causa
+[Descripción breve del problema]
+
+## Solución
+- [Cambios realizados]
+- [Archivos modificados]
+
+## Deploy
+```bash
+[Pasos de instalación]
+```
+
+## Resultado
+[Qué esperar después del fix]
+```
+
+## Al Detectar Error
+1. Crear `fixes/FIX_v{nueva_version}.md`
+2. Actualizar versión en `__manifest__.py`
+3. Documentar en `CHANGELOG.md`
+4. Generar `.zip` para deploy
+5. Actualizar reglas si aplica
+
+## Ejemplo
+```
+Error: AttributeError en QWeb
+→ fixes/FIX_v17.0.1.1.1.md
+→ custom_delivery_report/__manifest__.py (version++)
+→ custom_delivery_report/CHANGELOG.md (nueva entrada)
+→ custom_delivery_report.zip (regenerar)
+```

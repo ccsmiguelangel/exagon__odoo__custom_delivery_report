@@ -1,0 +1,64 @@
+---
+alwaysApply: true
+---
+# Odoo 17 - Módulo Custom Delivery
+
+## Referencias Odoo
+- [Documentación Odoo 17](https://www.odoo.com/documentation/17.0/)
+- [QWeb Templates](https://www.odoo.com/documentation/17.0/developer/reference/frontend/qweb.html)
+- [ORM API](https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html)
+
+## Proyecto
+- **Módulos:** `custom_delivery_report` y `custom_delivery_email` (mismo código, diferente nombre)
+- **Función:** Personaliza PDF y Email de albaranes (stock.picking)
+- **Configuración:** Por empresa vía `ir.config_parameter`
+- **Versión:** 17.0.1.2.2 ✅ Con pluralización
+- **Nota:** v1.1.1 primera funcional, v1.2.0 empaquetado, v1.2.1 formato completo, v1.2.2 pluralización
+
+## Entorno
+- Odoo 17 Community en CloudClusters (Kubernetes)
+- Acceso: FTPS + Web shell (NO SSH)
+- Ruta: `/cloudclusters/odoo/odoo/addons/`
+- **CRÍTICO:** Multiempresa - errores afectan todas
+
+## Estructura
+```
+proyecto/
+├── custom_delivery_[report|email]/
+│   ├── __manifest__.py
+│   ├── models/res_config_settings.py
+│   ├── views/
+│   │   ├── report_deliveryslip.xml
+│   │   └── res_config_settings_views.xml
+│   └── data/mail_template_delivery.xml
+├── fixes/                           # Documentación de fixes
+│   ├── README.md                    # Índice
+│   └── FIX_v{version}.md           # Por versión
+├── AGENTS/                          # Scripts útiles
+└── .cursor/rules/                   # Reglas Cursor
+```
+
+## Config por Empresa
+```python
+# Clave: custom_delivery_[report|email].use_custom_format.company_{company_id}
+# Valor: 'True' / 'False' (string)
+# Uso: o.company_id (documento) NO env.company (usuario)
+```
+
+## Reglas de Oro
+1. QWeb: Solo `t-foreach`, `t-if`, `t-field`, `t-esc` - NO funciones Python
+2. Campos: Usar stored (`quantity_done`) NO computed (`qty_done`)
+3. Fallbacks: Siempre `x or y or z`
+4. Config: Leer del documento `o.company_id.id` no del usuario
+5. NO modificar core de Odoo - solo herencias
+
+## Deploy
+1. Subir vía FTPS (sin .txt, .DS_Store, docs)
+2. Reiniciar Odoo (panel CloudClusters)
+3. Esperar 2-3 min
+4. Apps → Update Apps List → Instalar/Upgrade
+
+## Fixes
+- Documentación: `fixes/FIX_v{version}.md`
+- Al encontrar error: Crear fix, actualizar versión, regenerar .zip
+- Índice: `fixes/README.md`

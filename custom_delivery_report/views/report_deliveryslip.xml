@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Herencia del reporte de albarán de entrega -->
+    <template id="report_delivery_document_custom_inherit" inherit_id="stock.report_delivery_document">
+        
+        <!-- Reemplazar la tabla de movimientos de stock -->
+        <xpath expr="//table[@name='stock_move_table']" position="replace">
+            <table class="table table-sm" name="stock_move_table" t-if="o.state != 'draft'">
+                
+                <!-- Verificar si la empresa usa formato personalizado -->
+                <t t-set="param_key" t-value="'custom_delivery_report.use_custom_format.company_%s' % o.company_id.id"/>
+                <t t-set="use_custom_format" t-value="env['ir.config_parameter'].sudo().get_param(param_key, 'False') == 'True'"/>
+                
+                <!-- FORMATO PERSONALIZADO -->
+                <t t-if="use_custom_format">
+                    <thead>
+                        <tr>
+                            <th><strong>Producto</strong></th>
+                            <th><strong>Lote/Nº de serie</strong></th>
+                            <th class="text-right"><strong>Entregado</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Iterar sobre move_line_ids_without_package -->
+                        <t t-foreach="o.move_line_ids_without_package" t-as="move_line">
+                            <t t-if="move_line.product_id">
+                                <tr>
+                                    <!-- Columna: Producto -->
+                                    <td>
+                                        <span t-field="move_line.product_id.display_name"/>
+                                        <t t-if="move_line.product_id.description_picking">
+                                            <br/>
+                                            <span class="text-muted" t-field="move_line.product_id.description_picking"/>
+                                        </t>
+                                    </td>
+                                    
+                                    <!-- Columna: Lote/Nº de serie -->
+                                    <td>
+                                        <t t-if="move_line.lot_id">
+                                            <span t-field="move_line.lot_id.name"/>
+                                        </t>
+                                        <t t-elif="move_line.lot_name">
+                                            <span t-field="move_line.lot_name"/>
+                                        </t>
+                                    </td>
+                                    
+                                    <!-- Columna: Entregado -->
+                                    <td class="text-right">
+                                        <!-- Cantidad con formato -->
+                                        <span t-field="move_line.quantity"/>
+                                        <span> </span>
+                                        <span t-field="move_line.product_uom_id.name"/>
+                                        
+                                        <!-- Información de empaquetado con cálculo -->
+                                        <t t-if="move_line.move_id.product_packaging_id">
+                                            <t t-set="packaging" t-value="move_line.move_id.product_packaging_id"/>
+                                            <t t-set="pkg_qty" t-value="int(move_line.quantity / packaging.qty) if packaging.qty else 0"/>
+                                            <span> (</span>
+                                            <t t-esc="pkg_qty"/>
+                                            <span> </span>
+                                            <!-- Pluralizar según cantidad -->
+                                            <t t-if="pkg_qty > 1">Cajas</t>
+                                            <t t-else="">Caja</t>
+                                            <span> de </span>
+                                            <t t-esc="int(packaging.qty)"/>
+                                            <span>Uds.)</span>
+                                        </t>
+<!--                                         
+                                        // Ubicación si está disponible
+                                        <t t-if="move_line.location_id">
+                                            <span> </span>
+                                            <span t-field="move_line.location_id.display_name"/>
+                                        </t> -->
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </t>
+                
+                <!-- FORMATO ESTÁNDAR ODOO -->
+                <t t-if="not use_custom_format">
+                    <thead>
+                        <tr>
+                            <th><strong>Producto</strong></th>
+                            <th class="text-center"><strong>Cantidad</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="lines" t-value="o.move_line_ids.filtered(lambda x: x.qty_done and x.product_id)"/>
+                        <t t-foreach="lines" t-as="move_line">
+                            <tr>
+                                <td>
+                                    <span t-field="move_line.product_id.display_name"/>
+                                    <t t-if="move_line.product_id.description_picking">
+                                        <br/><span class="text-muted" t-field="move_line.product_id.description_picking"/>
+                                    </t>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.product_uom_id.name"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </table>
+        </xpath>
+    </template>
+</odoo>

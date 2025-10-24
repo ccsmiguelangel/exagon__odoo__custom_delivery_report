@@ -1,0 +1,48 @@
+# Odoo 17 - Custom Delivery Module
+
+## Entorno
+- Odoo 17.0 Community en CloudClusters (Kubernetes)
+- Acceso: Web shell + FTPS (NO SSH)
+- Ruta: `/cloudclusters/odoo/odoo/addons`
+- **CRÍTICO:** Multiempresa - errores afectan todas
+
+## Módulo
+- Personaliza PDF + Email de albaranes (stock.picking)
+- Configurable por empresa vía `ir.config_parameter`
+- Dependencias: `['stock', 'mail']`
+- Columnas: Producto | Lote/Nº serie | Entregado
+
+## Reglas Técnicas
+
+### QWeb (CRÍTICO)
+```xml
+❌ NUNCA: getattr(), hasattr(), filtered(lambda)
+✅ SIEMPRE: t-foreach, t-if, t-field, t-esc
+```
+
+### Campos Odoo 17
+```python
+✅ quantity_done / quantity      # stored
+✅ reserved_quantity             # stored
+❌ qty_done                      # computed
+```
+
+### Config Multiempresa
+```python
+# CORRECTO: Empresa del documento
+param_key = f'custom_delivery_report.use_custom_format.company_{o.company_id.id}'
+
+# INCORRECTO: Empresa del usuario
+param_key = f'custom_delivery_report.use_custom_format.company_{env.company.id}'
+```
+
+### Código
+- Python: `snake_case`, 4 espacios, docstrings español
+- QWeb: 4 espacios, fallbacks siempre, IDs descriptivos
+- NO modificar core Odoo
+
+### Deploy
+1. Subir vía FTPS (sin .txt, .DS_Store)
+2. Reiniciar Odoo
+3. Apps → Update Apps List
+4. Configurar en Ajustes > Inventario

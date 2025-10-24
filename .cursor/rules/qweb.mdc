@@ -1,0 +1,61 @@
+---
+globs: "*.xml"
+---
+# QWeb - Odoo 17
+
+## Referencias
+- [QWeb Templates](https://www.odoo.com/documentation/17.0/developer/reference/frontend/qweb.html)
+- [Views](https://www.odoo.com/documentation/17.0/developer/reference/backend/views.html)
+- [Reports](https://www.odoo.com/documentation/17.0/developer/reference/backend/reports.html)
+- [Stock Module](https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/inventory.html)
+
+## Restricciones CRÍTICAS
+```xml
+❌ NUNCA: getattr(), hasattr(), filtered(lambda x: complex)
+✅ SIEMPRE: t-foreach, t-if, t-field, t-esc
+```
+
+## Campos Seguros (Odoo 17)
+```xml
+✅ move_line.quantity                        <!-- stored -->
+✅ move_line.product_id                      <!-- relational -->
+✅ move_line.lot_id                          <!-- relational -->
+✅ move_line.lot_name                        <!-- stored -->
+✅ move_line.product_uom_id                  <!-- relational -->
+✅ move_line.move_id.product_packaging_id    <!-- empaquetado desde stock.move -->
+❌ move_line.qty_done                        <!-- computed, usar quantity -->
+❌ move_line.product_packaging_id            <!-- NO EXISTE en move_line -->
+❌ move_line.product_packaging_qty           <!-- NO EXISTE en move_line -->
+```
+
+## Empaquetado
+Para acceder al empaquetado, usar el modelo padre `stock.move`:
+```xml
+<t t-if="move_line.move_id.product_packaging_id">
+    <span t-field="move_line.move_id.product_packaging_id.name"/>
+</t>
+```
+
+## Config Condicional
+```xml
+<!-- Leer config de la empresa del documento (o.company_id) -->
+<t t-set="param_key" t-value="'custom_delivery_report.use_custom_format.company_%s' % o.company_id.id"/>
+<t t-set="use_custom" t-value="env['ir.config_parameter'].sudo().get_param(param_key, 'False') == 'True'"/>
+
+<t t-if="use_custom">
+    <!-- Formato personalizado -->
+</t>
+<t t-else="">
+    <!-- Formato estándar -->
+</t>
+```
+
+## Expresiones
+- Fallbacks: `move_line.lot_id.name or move_line.lot_name or ''`
+- Validación: `t-if="move_line.product_id"` antes de acceder
+- Números: `t-esc="int(value)"` para enteros
+
+## Estilo
+- Indentación: 4 espacios
+- IDs: `module_name.view_description`
+- Comentarios: español, breves

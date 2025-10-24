@@ -1,0 +1,40 @@
+# Odoo 17 - Custom Delivery Module
+
+## Estado
+- **Versión:** 17.0.1.2.2 ✅ **Con pluralización**
+- **Módulos:** `custom_delivery_report` y `custom_delivery_email` (idénticos)
+- **Estado:** Funcional - Formato: "24,000 Unidades (4 Cajas de 6Uds.)"
+- **Incluye:** Cantidad, UdM, empaquetado con pluralización automática
+
+## Documentación
+- **Reglas Cursor:** `.cursor/rules/` - Lee primero
+- **Scripts útiles:** `AGENTS/` - Diagnóstico y limpieza
+
+## Arquitectura
+```
+custom_delivery_[report|email]/
+├── models/res_config_settings.py  # Config por empresa
+├── views/
+│   ├── report_deliveryslip.xml    # PDF condicional
+│   └── res_config_settings_views.xml
+└── data/mail_template_delivery.xml
+```
+
+## Reglas NO NEGOCIABLES
+1. QWeb: NO funciones Python (`getattr`, `hasattr`, `lambda`)
+2. Campos: Usar `quantity` (stored) NO `qty_done` (computed)
+3. Config: Leer de `o.company_id.id` NO `env.company.id`
+4. Expresiones: Usar fallbacks `x or y or z`
+5. NO modificar core - solo herencias
+
+## Deploy
+```bash
+# 1. FTPS: Subir a /cloudclusters/odoo/odoo/addons/
+# 2. Reiniciar Odoo (panel CloudClusters)
+# 3. Apps → Update Apps List → Instalar
+```
+
+## Entorno
+- CloudClusters (K8s) - Multiempresa
+- Acceso: FTPS + Web shell (NO SSH)
+- RAM: ~2GB

@@ -1,0 +1,35 @@
+---
+globs: "*.py"
+---
+# Python - Odoo 17
+
+## Referencias
+- [Odoo ORM API](https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html)
+- [Models](https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#models)
+- [Fields](https://www.odoo.com/documentation/17.0/developer/reference/backend/orm.html#fields)
+- [Config Settings](https://www.odoo.com/documentation/17.0/developer/reference/backend/mixins.html#module-odoo.addons.base.models.res_config)
+
+## Estilo
+- Indentación: 4 espacios
+- Encoding: UTF-8
+- Imports: stdlib → third-party → odoo → local
+- Docstrings: español, breves
+
+## Config por Empresa
+```python
+# CORRECTO: Empresa del documento
+company_id = self.env.company.id  # En config settings
+company_id = o.company_id.id      # En QWeb
+
+param_key = f'custom_delivery_report.use_custom_format.company_{company_id}'
+value = env['ir.config_parameter'].sudo().get_param(param_key, 'False')
+
+# Leer: get_param(key, 'False') == 'True'
+# Escribir: set_param(key, boolean_value)
+```
+
+## Convenciones
+- Variables/funciones: `snake_case`
+- Clases: `PascalCase`
+- Constantes: `UPPER_SNAKE_CASE`
+- No type hints en Odoo (compatibilidad)

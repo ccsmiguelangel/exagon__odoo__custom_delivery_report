@@ -1,0 +1,35 @@
+---
+description: "Solución de problemas comunes del módulo"
+---
+# Troubleshooting
+
+## Módulo no aparece
+1. Verificar ruta: `/cloudclusters/odoo/odoo/addons/custom_delivery_[report|email]/`
+2. Reiniciar Odoo (panel CloudClusters)
+3. Esperar 2-3 min
+4. Apps → Update Apps List
+5. Buscar sin filtros
+
+## Error "cannot be downloaded"
+- **Causa:** Odoo no reiniciado
+- **Fix:** Reiniciar Odoo + Update Apps List
+
+## PDF no cambia
+1. Verificar config activa: Ajustes > Inventario > "Usar formato personalizado"
+2. Limpiar caché: Ajustes > Técnico > Regenerar Assets
+3. Browser: Ctrl+F5
+
+## Error QWeb
+- Verificar campos existen: `quantity`, `product_id`, `lot_id`
+- NO usar: `qty_done`, `getattr()`, `hasattr()`
+- Logs: `/var/log/odoo/odoo-server.log`
+
+## Permisos
+```bash
+chmod -R 755 /cloudclusters/odoo/odoo/addons/custom_delivery_*/
+```
+
+## Logs
+```bash
+tail -f /var/log/odoo/odoo-server.log | grep custom_delivery
+```
